@@ -111,7 +111,13 @@ def cut_weibo(data):#根据规则将新闻和评论分开,返回标签，1表示
             label_data.append(0)
             continue
         if l1 == 0:
-            label_data.append(1)
+            n = text.find('】')
+            comment = text[n:len(text)]
+            comment = cut_filter(comment)
+            if len(comment)>0:
+                label_data.append(1)
+            else:
+                label_data.append(0)
         else:
             label_data.append(0)
     
