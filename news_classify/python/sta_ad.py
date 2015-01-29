@@ -4,6 +4,7 @@ import os
 import scws
 import csv
 import re
+import time
 from svmutil import *
 
 SCWS_ENCODING = 'utf-8'
@@ -86,11 +87,40 @@ def choose_ad(flag):
 ##    y, x = svm_read_problem('./svm/train20150124.txt')
 ##    m = svm_train(y, x, '-c 4 -h 0')
 ##    svm_save_model('./svm/train.model',m)
+    start = time.time()
     m = svm_load_model('./svm/train.model')
     y, x = svm_read_problem('./svm_test/test%s.txt' % flag)
     p_label, p_acc, p_val  = svm_predict(y, x, m)
+    end = time.time()
+    print (end-start)
 
     return p_label
+
+def cut_mid_weibo(text):#在中性情感中根据规则再提取新闻微博
+
+    n1 = text.find('发表')
+    n2 = text.find('【')
+
+    if '//' in text:
+        return -1
+    
+    if n1 == 0:
+        return 0
+    
+    if n2 == -1:
+        if '！' in text or '？' in text:
+            return -1
+        else:
+            return 2
+        
+    sub_str = text[0:n2]
+    
+    if '#' in sub_str and '//' not in sub_str and '@' not in sub_str:
+        return 0
+    if '！' in text or '？' in text:
+        return -1
+    
+    return 2
 
 def cut_weibo(data):#根据规则将新闻和评论分开,返回标签，1表示新闻，0表示非新闻
     '''

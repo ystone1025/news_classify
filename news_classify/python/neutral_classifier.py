@@ -76,6 +76,17 @@ def cut_filter(text):
         text = p.sub('', text)
     return text
 
+def remove_at(text):
+    """text去除@
+       text: utf-8
+    """
+    at_pattern = r'\/\/@(.+?):'
+    #text = text + ' ' # 在每个input后加一个空格，以去掉@在末尾的情况
+    text = re.sub(at_pattern, '。', text)
+    #text = text.strip()
+
+    return text
+
 def emoticon(pe_set, ne_set, text):
     """ Extract emoticons and define the overall sentiment"""
 
@@ -127,6 +138,8 @@ def triple_classifier(tweet):
     
     if '//@' in text:
         text = text[:text.index('//@')]
+    if not len(text):
+        text = remove_at(tweet)
     emoticon_sentiment = emoticon(pe_set,ne_set, text)
     if emoticon_sentiment in [1,2]:
         sentiment = 1
@@ -146,3 +159,8 @@ def triple_classifier(tweet):
             sentiment = 0
 
     return sentiment
+
+
+if __name__ == '__main__':
+    text = remove_at('//@王振宇律师: //@三圣临朝你幸福吗://@文山娃:副局长叫冯志明，王，徐两位律师代理的杜文案，以及 @王振宇律师 代理的呼格案再审，冯均为案件关联人 //@李和平律师:局长是谁？他应对骚扰负责//@徐昕:还没查到我这里呀，吓死了 //@文山娃: //@王甫律师:这是第一次遭遇警察查房，而且是白天。太巧了！')
+    print text
