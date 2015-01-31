@@ -21,7 +21,7 @@ def load_angry():
 
 def load_sad():
     sad_list = []
-    reader = csv.reader(file('./words/happy.txt', 'rb'))
+    reader = csv.reader(file('./words/sad.txt', 'rb'))
     for line in reader:
         sad_list.append(line[0])
     return sad_list
@@ -38,7 +38,7 @@ def main(name):#数据输入
         text = line[2]
         mid = line[0]
         label = mid_sentiment_classify(text)        
-        label_data.append([label,mid])
+        label_data.append([label,mid,text])
 
     with open('./test/test_weibo_%s.csv' % name, 'wb') as f:
         writer = csv.writer(f)
@@ -48,6 +48,7 @@ def main(name):#数据输入
 def mid_sentiment_classify(text):#中性情绪再分类
 
     label = label_classify(text)
+    #print label
     if label == -1:
         label = label_adjust(label,text)
 
@@ -107,4 +108,4 @@ def label_classify(text):#中性文本分类
         
 
 if __name__ == '__main__':
-    main('rub0131')
+    main('edu0131')
